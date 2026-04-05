@@ -1,0 +1,87 @@
+[
+  {
+    "competitor": "Notion",
+    "url": "https://www.notion.so/pricing",
+    "checked_at": "2026-04-04T11:08:32.807721+00:00",
+    "change_score": 0,
+    "has_changes": false,
+    "changes": [],
+    "current_prices": [],
+    "current_plans": [],
+    "ai_summary": "No significant changes detected since last scan.",
+    "analyzed_at": "2026-04-04T11:09:15.601566+00:00"
+  },
+  {
+    "competitor": "Linear",
+    "url": "https://linear.app/pricing",
+    "checked_at": "2026-04-04T11:08:32.762665+00:00",
+    "change_score": 50,
+    "has_changes": true,
+    "changes": [
+      {
+        "type": "price_added",
+        "detail": "New prices appeared: $0, $10, $16",
+        "severity": "high"
+      },
+      {
+        "type": "plan_added",
+        "detail": "New plans detected: Team, Basic, Business, Enterprise, Free",
+        "severity": "medium"
+      }
+    ],
+    "current_prices": [
+      "$10",
+      "$0",
+      "$16"
+    ],
+    "current_plans": [
+      "Free",
+      "Basic",
+      "Business",
+      "Enterprise",
+      "Team"
+    ],
+    "ai_summary": "Linear has introduced new pricing tiers, including a $16 plan, and reorganized their plans to include a \"Free\" option, indicating a strategic shift towards attracting a wider range of customers. This change may signal a more competitive pricing approach, potentially targeting budget-conscious users and enterprises alike. By offering a free plan, Linear is likely aiming to increase user acquisition and upsell opportunities, posing a competitive threat to our own pricing strategy.",
+    "analyzed_at": "2026-04-04T11:09:16.901131+00:00"
+  },
+  {
+    "competitor": "Vercel",
+    "url": "https://vercel.com/pricing",
+    "checked_at": "2026-04-04T11:08:32.773698+00:00",
+    "change_score": 60,
+    "has_changes": true,
+    "changes": [
+      {
+        "type": "price_added",
+        "detail": "New prices appeared: $5.00, $0.12, $0.00, $2, $0.01",
+        "severity": "high"
+      },
+      {
+        "type": "price_removed",
+        "detail": "Prices disappeared: $0.06, $0.05, $4.00, $4, $0.50",
+        "severity": "high"
+      }
+    ],
+    "current_prices": [
+      "$2",
+      "$0.60",
+      "$0.01",
+      "$5.00",
+      "$0.15",
+      "$0.12",
+      "$0.08",
+      "$0.00",
+      "$2.50",
+      "$50"
+    ],
+    "current_plans": [
+      "Free",
+      "Pro",
+      "Team",
+      "Enterprise",
+      "Basic"
+    ],
+    "ai_summary": "Vercel has introduced new pricing tiers, including a $5.00 option, and eliminated previous prices such as $0.06 and $4.00, indicating a strategic shift towards more flexible and potentially competitive pricing. This change may be aimed at attracting a wider range of customers, from small businesses to large enterprises, and increasing revenue through more targeted pricing plans. The updated pricing structure likely reflects Vercel's efforts to stay competitive in the market and adapt to changing customer needs.",
+    "analyzed_at": "2026-04-04T11:09:17.968010+00:00"
+  }
+]

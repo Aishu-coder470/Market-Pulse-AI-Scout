@@ -1,0 +1,81 @@
+[
+  {
+    "competitor": "Notion",
+    "url": "https://www.notion.so/pricing",
+    "checked_at": "2026-04-04T11:08:32.807721+00:00",
+    "change_score": 0,
+    "has_changes": false,
+    "changes": [],
+    "current_prices": [],
+    "current_plans": []
+  },
+  {
+    "competitor": "Linear",
+    "url": "https://linear.app/pricing",
+    "checked_at": "2026-04-04T11:08:32.762665+00:00",
+    "change_score": 50,
+    "has_changes": true,
+    "changes": [
+      {
+        "type": "price_added",
+        "detail": "New prices appeared: $0, $10, $16",
+        "severity": "high"
+      },
+      {
+        "type": "plan_added",
+        "detail": "New plans detected: Team, Basic, Business, Enterprise, Free",
+        "severity": "medium"
+      }
+    ],
+    "current_prices": [
+      "$10",
+      "$0",
+      "$16"
+    ],
+    "current_plans": [
+      "Free",
+      "Basic",
+      "Business",
+      "Enterprise",
+      "Team"
+    ]
+  },
+  {
+    "competitor": "Vercel",
+    "url": "https://vercel.com/pricing",
+    "checked_at": "2026-04-04T11:08:32.773698+00:00",
+    "change_score": 60,
+    "has_changes": true,
+    "changes": [
+      {
+        "type": "price_added",
+        "detail": "New prices appeared: $5.00, $0.12, $0.00, $2, $0.01",
+        "severity": "high"
+      },
+      {
+        "type": "price_removed",
+        "detail": "Prices disappeared: $0.06, $0.05, $4.00, $4, $0.50",
+        "severity": "high"
+      }
+    ],
+    "current_prices": [
+      "$2",
+      "$0.60",
+      "$0.01",
+      "$5.00",
+      "$0.15",
+      "$0.12",
+      "$0.08",
+      "$0.00",
+      "$2.50",
+      "$50"
+    ],
+    "current_plans": [
+      "Free",
+      "Pro",
+      "Team",
+      "Enterprise",
+      "Basic"
+    ]
+  }
+]

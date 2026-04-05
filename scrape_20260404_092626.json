@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Notion",
+    "url": "https://www.notion.so/pricing",
+    "scraped_at": "2026-04-04T09:25:55.970399",
+    "status": "error",
+    "raw_text": "",
+    "prices": [],
+    "features": [],
+    "page_title": "",
+    "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\nnavigating to \"https://www.notion.so/pricing\", waiting until \"networkidle\"\n"
+  },
+  {
+    "name": "Linear",
+    "url": "https://linear.app/pricing",
+    "scraped_at": "2026-04-04T09:25:55.898333",
+    "status": "error",
+    "raw_text": "",
+    "prices": [],
+    "features": [],
+    "page_title": "",
+    "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\nnavigating to \"https://linear.app/pricing\", waiting until \"networkidle\"\n"
+  },
+  {
+    "name": "Vercel",
+    "url": "https://vercel.com/pricing",
+    "scraped_at": "2026-04-04T09:25:55.930186",
+    "status": "success",
+    "raw_text": "Find a plan to power your apps. Vercel supports teams of all sizes, with pricing that scales. Hobby The perfect starting place for your web app or personal project. Free forever. Import your repo, deploy in seconds Automatic CI/CD Web Application Firewall Global, automated CDN Fluid compute DDoS Mitigation Traffic & performance insights Start Deploying Popular Pro Popular Everything you need to build and scale your app. $20/mo + additional usage All Hobby features, plus: $20 of included usage credit Advanced spend management Team collaboration & free viewer seats Faster builds + no queues Cold start prevention Enterprise add-ons Start a free trial Start a free trial Enterprise Critical security, performance, observability, platform SLAs, and support. All Pro features, plus: Guest & Team access controls SCIM & Directory Sync Managed WAF Rulesets Multi-region compute & failover 99.99% SLA Advanced Support Get a demo Request Trial Get started with v0 . Generate quality UI, and ship applications end-to-end. Start building with v0 Features Hobby Start Deploying Pro Start a free trial Enterprise Get a demo Hobby Pro Enterprise Start Deploying Managed Infrastructure Vercel Delivery Network Ultra-fast, secure by default global application delivery. Vercel Network Global Points of Presence Vercel Regions Automatic Routing HTTPS Certificates TLS/SSL Encryption Traffic Load Balancing Private Inter-Region Network Automatic Region Failover Configurable Routing Reverse Proxy Rewrites Redirects Middleware Support Edge Requests 1M / month included 10M / month included then starting at $2 per 1M Custom Fast Data Transfer 100 GB / month included 1TB / month included then starting at $0.15 per GB Custom Regional pricing Managed Infrastructure Vercel Firewall Customizable security to protect your applications. Web Application Firewall Custom Firewall Rules Up to 3 Up to 40 Up to 1,000 IP Blocking Up to 3 Up to 100 Up to 1,000 System Bypass Rules \u2014 Up to 25 Up to 100 Rate Limiting 1M allowed requests included / month Starting at $0.50 per 1M allowed requests Custom OWASP Core Ruleset (managed) \u2014 \u2014 Custom Bot Management Automated DDoS Mitigation AI Bots (managed ruleset) Bot Protection (managed ruleset) BotID Basic checks included $1 per 1,000 Deep Analysis checks Custom Attack Challenge Mode Regional pricing Managed Infrastructure Content, Caching & Optimization Store and cache content close to your customers. Content Delivery Zero-config CDN cache Automated Compression Background Revalidation Stale-While-Revalidate Incremental Static Regeneration (ISR) ISR Reads 1M / month included Starting at $0.40 per 1M Custom ISR Writes 200,000 / month included Starting at $4 per 1M Custom Bulk Redirects 1K included per project $50 per month per 25K redirects Custom Blob Storage Size 1 GB / month included $0.023 per GB Custom Simple Operations 10,000 / month included $0.40 per 1M Custom Advanced Operations 2,000 / month included $5.00 per 1M Custom Blob Data Transfer 10 GB / month included Starting at $0.05 per GB Custom Image Optimization Image Transformations 5,000 / month included Starting at $0.05 per 1K Custom Image Cache Reads 300,000 / month included Starting at $0.40 per 1M Custom Image Cache Writes 100,000 / month included Starting at $4.00 per 1M Custom Edge Config Edge Config Reads 100,000 / month included Starting at $3.00 per 1M reads Custom Edge Config Writes 100 writes / month included $5.00 per 500 writes Custom Microfrontends Support Microfrontends 2 included projects 2 included projects then $250 per additional project Custom Microfrontend Routing 50K routed requests / month included $2 per 1M routed requests Custom Regional pricing Managed Infrastructure Vercel Compute Dynamic, scalable functions to power your framework of choice. Now available with Fluid compute with Active CPU pricing . Vercel Functions Active CPU 4 hours / month included Starting at $0.128 per hour Custom Provisioned Memory 360 GB-hrs / month included Starting at $0.0106 per GB-Hour Custom Invocations 1M / month included Starting at $0.60 per 1M Custom Vercel Sandbox Active CPU 5 hours / month included Starting at $0.128 per hour Custom Provisioned Memory 420 GB-Hours / month included Starting at $0.0212 per GB-hr Custom Creation 5,000 / month included Starting at $0.60 per 1M Custom Network 20 GB / month included Starting at $0.15 per GB Custom Concurrent Sandboxes 10 2000 Custom Sandbox Storage 15 GB Starting at $0.08 per GB-month Custom Fast Origin Transfer 10 GB / month included Starting at $0.06 per GB Custom Vercel Workflow Beta Steps 50,000 steps / month included $2.50 per 100K Custom Storage 1 GB / month included $0.00069 per GB-hour Custom Vercel Queues Beta API Operations 1M / month included Starting at $0.60 per 1M Custom Cron Jobs Regional pricing AI Cloud AI Build, deploy, and scale AI features with secure inference, durable workflows, and intelligent assistance. Vercel Agent Beta $0.30 per action + pass-through token cost Custom Code Rev",
+    "prices": [
+      "$0.08",
+      "$0.15",
+      "$4.00",
+      "$2.50",
+      "$0.06",
+      "$0.50",
+      "$0.05",
+      "$0.60",
+      "$50",
+      "$4"
+    ],
+    "features": [
+      "Free",
+      "Pro",
+      "Team",
+      "Enterprise",
+      "Basic"
+    ],
+    "page_title": "Vercel Pricing: Hobby, Pro, and Enterprise plans"
+  }
+]

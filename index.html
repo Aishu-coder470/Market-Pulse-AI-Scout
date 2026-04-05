@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CompeteIQ — Intelligence Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0c;
+    --surface: #111115;
+    --surface2: #18181f;
+    --border: #222230;
+    --border2: #2e2e40;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --accent: #5b6aff;
+    --accent2: #ff5b7a;
+    --green: #2de08a;
+    --amber: #ffb347;
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(91,106,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(91,106,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #root { position: relative; z-index: 1; }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 36px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,12,0.9);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:0.6; transform:scale(0.8); }
+  }
+  .header-right { display:flex; align-items:center; gap:16px; }
+  .status-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 12px;
+    border: 1px solid var(--green);
+    color: var(--green);
+    border-radius: 2px;
+    letter-spacing: 1px;
+  }
+  .last-run { font-family:var(--mono); font-size:11px; color:var(--muted); }
+  .btn-run {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 9px 20px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-run:hover { opacity: 0.85; }
+  .btn-run:disabled { background:var(--surface2); color:var(--muted); border:1px solid var(--border); cursor:not-allowed; }
+
+  /* Layout */
+  .main { padding: 32px 36px; max-width: 1400px; margin: 0 auto; }
+
+  /* Stats */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--line-color, var(--accent));
+  }
+  .stat-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+  .stat-value { font-family:var(--mono); font-size:36px; font-weight:700; line-height:1; margin-bottom:6px; }
+  .stat-sub   { font-size:12px; color:var(--muted); }
+
+  /* Tabs */
+  .tabs { display:flex; margin-bottom:24px; border-bottom:1px solid var(--border); }
+  .tab {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    cursor: pointer;
+    color: var(--muted);
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    transition: color 0.15s;
+  }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+  /* Grids */
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:32px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:32px; }
+
+  /* Cards */
+  .card { background:var(--surface); border:1px solid var(--border); padding:24px; }
+  .card-title { font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:20px; }
+
+  /* Competitor cards */
+  .competitor-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .competitor-card:hover { border-color: var(--border2); }
+  .competitor-card.active { border-color:var(--accent); background:rgba(91,106,255,0.05); }
+
+  .comp-header { display:flex; align-items:center; justify-content:space-between; }
+  .comp-name   { font-family:var(--mono); font-size:15px; font-weight:700; }
+
+  .pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-weight: 700;
+  }
+  .pill-alert { background:rgba(255,91,122,0.15); color:var(--accent2); border:1px solid rgba(255,91,122,0.3); }
+  .pill-warn  { background:rgba(255,179,71,0.12);  color:var(--amber);   border:1px solid rgba(255,179,71,0.25); }
+  .pill-ok    { background:rgba(45,224,138,0.1);   color:var(--green);   border:1px solid rgba(45,224,138,0.2); }
+
+  .score-bar  { height:3px; background:var(--border); border-radius:1px; overflow:hidden; }
+  .score-fill { height:100%; border-radius:1px; transition:width 0.8s cubic-bezier(0.4,0,0.2,1); }
+
+  .comp-meta  { display:flex; gap:8px; flex-wrap:wrap; }
+  .comp-tag   { font-family:var(--mono); font-size:10px; color:var(--muted); background:var(--surface2); border:1px solid var(--border); padding:3px 8px; border-radius:2px; }
+
+  .comp-summary { font-size:13px; color:#9999b0; line-height:1.65; font-style:italic; border-left:2px solid var(--accent); padding-left:12px; }
+  .comp-time    { font-family:var(--mono); font-size:10px; color:var(--muted); }
+
+  /* Change log */
+  .change-item  { display:flex; gap:12px; padding:14px 0; border-bottom:1px solid var(--border); align-items:flex-start; }
+  .change-item:last-child { border-bottom:none; }
+  .sev-dot      { width:6px; height:6px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+  .sev-high     { background:var(--accent2); box-shadow:0 0 6px var(--accent2); }
+  .sev-medium   { background:var(--amber); }
+  .change-time  { font-family:var(--mono); font-size:10px; color:var(--muted); min-width:70px; padding-top:2px; }
+  .change-body  { flex:1; }
+  .change-comp  { font-family:var(--mono); font-size:12px; font-weight:700; margin-bottom:3px; }
+  .change-detail{ font-size:13px; color:#9999b0; line-height:1.5; }
+
+  /* Alert banner */
+  .alert-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,91,122,0.07);
+    border: 1px solid rgba(255,91,122,0.25);
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  .alert-icon { font-family:var(--mono); font-size:11px; color:var(--accent2); letter-spacing:1px; white-space:nowrap; }
+  .alert-text { font-size:13px; color:#cc4466; line-height:1.5; }
+
+  /* Chart containers */
+  .chart-wrap { position:relative; height:220px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+  .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+  .section-title  { font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<div id="root">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-dot"></div>
+      CompeteIQ
+    </div>
+    <div class="header-right">
+      <span class="last-run" id="last-run-label">LAST RUN: 06:30 UTC today</span>
+      <span class="status-badge">LIVE</span>
+      <button class="btn-run" id="run-btn" onclick="simulateRun()">▶ RUN NOW</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Alert banner -->
+    <div class="alert-banner" id="alert-banner">
+      <span class="alert-icon">! ALERT</span>
+      <span class="alert-text" id="alert-text"></span>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card" style="--line-color:#5b6aff">
+        <div class="stat-label">Competitors Tracked</div>
+        <div class="stat-value" style="color:#5b6aff" id="stat-total">0</div>
+        <div class="stat-sub">Active scrapers</div>
+      </div>
+      <div class="stat-card" style="--line-color:#ffb347">
+        <div class="stat-label">Changes Detected</div>
+        <div class="stat-value" style="color:#ffb347" id="stat-changes">0</div>
+        <div class="stat-sub">Last 24 hours</div>
+      </div>
+      <div class="stat-card" style="--line-color:#ff5b7a">
+        <div class="stat-label">High Severity Alerts</div>
+        <div class="stat-value" style="color:#ff5b7a" id="stat-high">0</div>
+        <div class="stat-sub">Require attention</div>
+      </div>
+      <div class="stat-card" style="--line-color:#2de08a">
+        <div class="stat-label">Avg Change Score</div>
+        <div class="stat-value" style="color:#2de08a" id="stat-avg">0</div>
+        <div class="stat-sub">Out of 100</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('overview', this)">Overview</button>
+      <button class="tab" onclick="switchTab('changes', this)">Changes</button>
+      <button class="tab" onclick="switchTab('trends', this)">Trends</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="tab-overview">
+      <div class="section-header">
+        <span class="section-title">Competitor Status</span>
+      </div>
+      <div class="grid-3" id="competitor-cards"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Change Activity — Last 8 Days</div>
+          <div class="chart-wrap"><canvas id="activityChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Price History — Entry Plan ($/mo)</div>
+          <div class="chart-wrap"><canvas id="priceChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Changes Tab -->
+    <div id="tab-changes" class="hidden">
+      <div class="card">
+        <div class="card-title">Recent Changes — All Competitors</div>
+        <div id="change-log"></div>
+      </div>
+    </div>
+
+    <!-- Trends Tab -->
+    <div id="tab-trends" class="hidden">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Change Score by Competitor</div>
+          <div class="chart-wrap"><canvas id="scoreChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Plan Count Comparison</div>
+          <div class="chart-wrap"><canvas id="planChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+const MOCK_DATA = [
+  {
+    name: "Notion", url: "https://notion.so/pricing",
+    change_score: 72, has_changes: true,
+    current_prices: ["$10/mo","$15/mo","$18/mo"],
+    current_plans:  ["Free","Plus","Business","Enterprise"],
+    ai_summary: "Notion dropped their Plus plan price from $16 to $10/mo — a 37% reduction likely targeting Linear and Coda. Their Enterprise tier now includes SSO by default, removing a key upsell barrier.",
+    changes: [
+      { type:"price_removed", detail:"Price $16/mo disappeared from pricing page", severity:"high"   },
+      { type:"price_added",   detail:"New price $10/mo detected on Plus plan",      severity:"high"   },
+      { type:"plan_added",    detail:"SSO now mentioned under Business tier",        severity:"medium" }
+    ],
+    checked_at: new Date(Date.now() - 3600000).toISOString()
+  },
+  {
+    name: "Linear", url: "https://linear.app/pricing",
+    change_score: 28, has_changes: true,
+    current_prices: ["$8/mo","$16/mo"],
+    current_plans:  ["Free","Basic","Business","Enterprise"],
+    ai_summary: "Linear added a new 'Basic' plan at $8/user/month, positioned between Free and Business. This closes the gap with Jira pricing and signals a push into mid-market.",
+    changes: [
+      { type:"plan_added",  detail:"New plan 'Basic' appeared in plan list", severity:"medium" },
+      { type:"price_added", detail:"New price point $8/mo detected",          severity:"medium" }
+    ],
+    checked_at: new Date(Date.now() - 3600000).toISOString()
+  },
+  {
+    name: "Vercel", url: "https://vercel.com/pricing",
+    change_score: 0, has_changes: false,
+    current_prices: ["$20/mo","$400/mo"],
+    current_plans:  ["Hobby","Pro","Enterprise"],
+    ai_summary: "No significant changes detected since last scan. Pricing and feature structure remain stable.",
+    changes: [],
+    checked_at: new Date(Date.now() - 3600000).toISOString()
+  }
+];
+
+const HISTORY_DATA = {
+  labels: ["Mar 28","Mar 29","Mar 30","Mar 31","Apr 01","Apr 02","Apr 03","Apr 04"],
+  notion:  [5, 0, 15, 0, 22, 0, 0, 72],
+  linear:  [0, 8,  0, 0,  5, 0,15, 28],
+  vercel:  [12,0,  0, 5,  0, 0, 3,  0]
+};
+
+const PRICE_DATA = {
+  labels: ["Nov","Dec","Jan","Feb","Mar","Apr"],
+  notion: [16,16,16,16,16,10],
+  linear: [8, 8, 8, 8, 8, 8]
+};
+
+let appData = [...MOCK_DATA];
+let charts  = {};
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function scoreColor(score) {
+  if (score >= 50) return "#ff5b7a";
+  if (score >= 20) return "#ffb347";
+  return "#2de08a";
+}
+
+function pillHTML(score, hasChanges) {
+  if (!hasChanges) return '<span class="pill pill-ok">NO CHANGE</span>';
+  if (score >= 50)  return '<span class="pill pill-alert">⚠ HIGH</span>';
+  return '<span class="pill pill-warn">~ MEDIUM</span>';
+}
+
+function timeAgo(iso) {
+  const s = (Date.now() - new Date(iso)) / 1000;
+  if (s < 60)   return Math.floor(s) + "s ago";
+  if (s < 3600) return Math.floor(s/60) + "m ago";
+  return Math.floor(s/3600) + "h ago";
+}
+
+// ── Fetch real data from API (falls back to mock) ─────────────────────────────
+
+async function loadData() {
+  try {
+    const res = await fetch("http://localhost:3001/api/competitors");
+    if (!res.ok) throw new Error("API not ready");
+    const json = await res.json();
+    if (json.success && json.data.length > 0) {
+      appData = json.data;
+    }
+  } catch (e) {
+    console.log("Using mock data (API not reachable):", e.message);
+  }
+  render();
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+
+function render() {
+  renderStats();
+  renderAlert();
+  renderCards();
+  renderChangelog();
+  renderCharts();
+}
+
+function renderStats() {
+  const total   = appData.length;
+  const changes = appData.filter(d => d.has_changes).length;
+  const high    = appData.filter(d => d.change_score >= 50).length;
+  const avg     = Math.round(appData.reduce((s,d) => s + d.change_score, 0) / total);
+
+  document.getElementById("stat-total").textContent   = total;
+  document.getElementById("stat-changes").textContent = changes;
+  document.getElementById("stat-high").textContent    = high;
+  document.getElementById("stat-avg").textContent     = avg;
+}
+
+function renderAlert() {
+  const high = appData.filter(d => d.change_score >= 50);
+  const banner = document.getElementById("alert-banner");
+  if (high.length === 0) { banner.style.display = "none"; return; }
+  banner.style.display = "flex";
+  document.getElementById("alert-text").innerHTML =
+    `<strong style="color:#ff5b7a">${high[0].name}</strong> had a high-severity change detected. ${high[0].ai_summary.split(".")[0]}.`;
+}
+
+function renderCards() {
+  const container = document.getElementById("competitor-cards");
+  container.innerHTML = appData.map(d => `
+    <div class="competitor-card" onclick="toggleCard(this, '${d.name}')">
+      <div class="comp-header">
+        <span class="comp-name">${d.name}</span>
+        ${pillHTML(d.change_score, d.has_changes)}
+      </div>
+      <div class="score-bar">
+        <div class="score-fill" style="width:${d.change_score}%;background:${scoreColor(d.change_score)}"></div>
+      </div>
+      <div class="comp-meta">
+        ${d.current_prices.slice(0,3).map(p => `<span class="comp-tag">${p}</span>`).join("")}
+        ${d.current_plans.slice(0,2).map(p  => `<span class="comp-tag">${p}</span>`).join("")}
+      </div>
+      ${d.has_changes ? `<div class="comp-summary">${d.ai_summary}</div>` : ""}
+      <div class="comp-time">SCANNED ${timeAgo(d.checked_at).toUpperCase()}</div>
+    </div>
+  `).join("");
+}
+
+function toggleCard(el) {
+  el.classList.toggle("active");
+}
+
+function renderChangelog() {
+  const allChanges = appData
+    .filter(d => d.has_changes)
+    .flatMap(d => d.changes.map(c => ({ ...c, competitor: d.name, at: d.checked_at })))
+    .sort((a,b) => a.severity === "high" ? -1 : 1);
+
+  const container = document.getElementById("change-log");
+  if (!allChanges.length) {
+    container.innerHTML = `<div style="color:var(--muted);font-family:var(--mono);font-size:12px;padding:20px 0">// no changes detected</div>`;
+    return;
+  }
+  container.innerHTML = allChanges.map(c => `
+    <div class="change-item">
+      <div class="sev-dot ${c.severity === 'high' ? 'sev-high' : 'sev-medium'}"></div>
+      <div class="change-time">${timeAgo(c.at)}</div>
+      <div class="change-body">
+        <div class="change-comp">${c.competitor}</div>
+        <div class="change-detail">${c.detail}</div>
+      </div>
+      <span class="pill ${c.severity === 'high' ? 'pill-alert' : 'pill-warn'}">${c.severity.toUpperCase()}</span>
+    </div>
+  `).join("");
+}
+
+function renderCharts() {
+  const chartDefaults = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: "#6b6b80", font: { family: "Space Mono", size: 10 }, boxWidth: 12 } } },
+    scales: {
+      x: { grid: { color: "#222230" }, ticks: { color: "#6b6b80", font: { family: "Space Mono", size: 10 } } },
+      y: { grid: { color: "#222230" }, ticks: { color: "#6b6b80", font: { family: "Space Mono", size: 10 } } }
+    }
+  };
+
+  // Activity chart
+  if (charts.activity) charts.activity.destroy();
+  charts.activity = new Chart(document.getElementById("activityChart"), {
+    type: "line",
+    data: {
+      labels: HISTORY_DATA.labels,
+      datasets: [
+        { label:"Notion", data:HISTORY_DATA.notion, borderColor:"#5b6aff", backgroundColor:"rgba(91,106,255,0.1)", fill:true, tension:0.3, pointRadius:3 },
+        { label:"Linear", data:HISTORY_DATA.linear, borderColor:"#ffb347", backgroundColor:"rgba(255,179,71,0.08)",  fill:true, tension:0.3, pointRadius:3 },
+        { label:"Vercel", data:HISTORY_DATA.vercel, borderColor:"#2de08a", backgroundColor:"rgba(45,224,138,0.06)", fill:true, tension:0.3, pointRadius:3 }
+      ]
+    },
+    options: { ...chartDefaults }
+  });
+
+  // Price chart
+  if (charts.price) charts.price.destroy();
+  charts.price = new Chart(document.getElementById("priceChart"), {
+    type: "line",
+    data: {
+      labels: PRICE_DATA.labels,
+      datasets: [
+        { label:"Notion", data:PRICE_DATA.notion, borderColor:"#5b6aff", backgroundColor:"rgba(91,106,255,0.1)", stepped:true, pointRadius:4 },
+        { label:"Linear", data:PRICE_DATA.linear, borderColor:"#ffb347", backgroundColor:"rgba(255,179,71,0.08)",  stepped:true, pointRadius:4 }
+      ]
+    },
+    options: { ...chartDefaults }
+  });
+
+  // Score bar chart
+  if (charts.score) charts.score.destroy();
+  charts.score = new Chart(document.getElementById("scoreChart"), {
+    type: "bar",
+    data: {
+      labels: appData.map(d => d.name),
+      datasets: [{
+        label: "Change Score",
+        data: appData.map(d => d.change_score),
+        backgroundColor: appData.map(d => scoreColor(d.change_score)),
+        borderRadius: 3
+      }]
+    },
+    options: { ...chartDefaults }
+  });
+
+  // Plan count chart
+  if (charts.plan) charts.plan.destroy();
+  charts.plan = new Chart(document.getElementById("planChart"), {
+    type: "bar",
+    data: {
+      labels: appData.map(d => d.name),
+      datasets: [
+        { label:"Plans",  data:appData.map(d => d.current_plans.length),  backgroundColor:"#5b6aff", borderRadius:3 },
+        { label:"Prices", data:appData.map(d => d.current_prices.length), backgroundColor:"#2de08a", borderRadius:3 }
+      ]
+    },
+    options: { ...chartDefaults }
+  });
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+
+function switchTab(name, btn) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  ["overview","changes","trends"].forEach(t => {
+    document.getElementById("tab-" + t).classList.toggle("hidden", t !== name);
+  });
+  if (name === "trends") {
+    // Redraw trend charts after they become visible
+    setTimeout(() => { charts.score && charts.score.update(); charts.plan && charts.plan.update(); }, 50);
+  }
+}
+
+// ── Simulate pipeline run ─────────────────────────────────────────────────────
+
+function simulateRun() {
+  const btn = document.getElementById("run-btn");
+  btn.disabled = true;
+  btn.textContent = "SCANNING...";
+  setTimeout(async () => {
+    await loadData();
+    btn.disabled = false;
+    btn.textContent = "▶ RUN NOW";
+    document.getElementById("last-run-label").textContent = "LAST RUN: Just now";
+  }, 2500);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+
+loadData();
+</script>
+</body>
+</html>
